@@ -19,29 +19,36 @@ int main()
 						sf::VideoMode(SCREEN_HEIGHT,SCREEN_WIDTH), "Command Pattern");
 	window.display();
 
-	Actor player("resources/char_sheet_new.png");
-
-	sf::Event e;
-
+	//INITIALIZING GAME OBJECTS
+	Actor player("resources/jerry_sheet.png",64,96);
 	InputHandler ih;
 
+	sf::Event e;
 	sf::Time dt;
 	sf::Clock clock;
 
-	//DEBUG: remove later
+	//DEBUG: remove later - this is to test the room
 	std::vector<Door> doorsTest;
 	Room r("resources/cells.png", doorsTest);
 
+		//setting the view and stuff
 	sf::View currView = window.getView();
 	currView.setCenter(player.getX(), player.getY());
 	window.setView(currView);
 
+	//DONE INITIALIZING
+
+	//housekeeping, put the player in the center of the game.
+	player.setPosition(r.getCenter().x, r.getCenter().y);
+
 	while(window.isOpen())
 	{
+		//get time for this frame
 		dt = clock.restart();
 
 		// printf("fps: %f\n", (1.0/dt.asSeconds()));
 
+		//handle events
 		while(window.pollEvent(e))
 		{
 			switch(e.type)
@@ -60,6 +67,7 @@ int main()
 			}
 		}
 
+		//center the view around the player
 		currView.setCenter(player.getX(), player.getY());
 		window.setView(currView);
 

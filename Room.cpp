@@ -6,6 +6,12 @@ Room::Room(std::string spriteFile, std::vector<Door> doorsIn)
 	sprite.setTexture(sourceTexture);
 
 	doors = doorsIn;
+	boundingRect = sprite.getGlobalBounds();
+}
+
+sf::Vector2f Room::getCenter()
+{
+	return sf::Vector2f(boundingRect.width/2, boundingRect.height/2);
 }
 
 void Room::draw(sf::RenderTarget &target, sf::RenderStates states) const

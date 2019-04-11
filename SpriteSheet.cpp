@@ -15,6 +15,7 @@ source(widthIn*2,0,widthIn, heightIn)
 	// printf("cols, rows: %d, %d\n", numCols, numRows);
 
 	currSprite = sf::Sprite(this->sheet, this->source);
+	currSprite.setOrigin(widthIn/2, heightIn/2);
 }
 
 void SpriteSheet::setSprite(int numIn)
@@ -39,6 +40,11 @@ float SpriteSheet::getX()
 float SpriteSheet::getY()
 {
 	return currSprite.getPosition().y;
+}
+
+void SpriteSheet::setPosition(float xIn, float yIn)
+{
+	currSprite.setPosition(xIn, yIn);
 }
 
 void SpriteSheet::move(float dx, float dy)

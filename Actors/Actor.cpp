@@ -1,12 +1,17 @@
 #include "Actor.h"
 
-Actor::Actor(std::string fileName)
+Actor::Actor(std::string fileName, int width, int height)
 :
-sheet(fileName, 64, 64)
+sheet(fileName, width, height)
 {
 	altMove  = false;
 	facing = DOWN;
 	spriteTimer = 0;
+}
+
+void Actor::setPosition(float xIn, float yIn)
+{
+	sheet.setPosition(xIn, yIn);
 }
 
 float Actor::getX()

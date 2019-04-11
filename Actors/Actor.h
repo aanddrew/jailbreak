@@ -46,8 +46,11 @@ private:
 	float speed = 200;
 	float spriteTimer;
 public:
-	Actor(std::string);
+	Actor(std::string,int, int);
 	// Actor(int, int);
+
+	void setPosition(float, float);
+
 	void setMoving(Move m, bool state);
 	void update(sf::Time dt);
 

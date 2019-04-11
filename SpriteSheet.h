@@ -20,6 +20,7 @@ public:
 	float getX();
 	float getY();
 
+	void setPosition(float, float);
 	void move(float, float);
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
