@@ -1,0 +1,2 @@
+g++ -c main.cpp Actors/Actor.cpp commands/ActorCommands.cpp SpriteSheet.cpp Room.cpp commands/InputHandler.cpp
+g++ main.o Actor.o ActorCommands.o SpriteSheet.o Room.o InputHandler.o -o a.out -lsfml-graphics -lsfml-window -lsfml-system
