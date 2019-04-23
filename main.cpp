@@ -3,6 +3,7 @@
 #include "commands/ActorCommands.h"
 #include "commands/InputHandler.h"
 #include "Room.h"
+#include "gameFunctions/Dialogue.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -20,8 +21,11 @@ int main()
 	window.display();
 
 	//INITIALIZING GAME OBJECTS
-	Actor player("resources/jerry_sheet.png",64,96);
+	Actor player("resources/char_sheet_new.png",64,64, 
+							 "resources/dialogues/player.txt");
 	InputHandler ih;
+
+	Actor bot("resources/jerry_sheet.png", 64,96, "resources/dialogues/jerry.txt");
 
 	sf::Event e;
 	sf::Time dt;
@@ -40,6 +44,9 @@ int main()
 
 	//housekeeping, put the player in the center of the game.
 	player.setPosition(r.getCenter().x, r.getCenter().y);
+	bot.setPosition(r.getCenter().x, r.getCenter().y);
+
+	Dialogue d(&player, &bot);
 
 	while(window.isOpen())
 	{
@@ -78,6 +85,9 @@ int main()
 		//draw
 		window.draw(r);
 		window.draw(player);
+		window.draw(bot);
+			//dialogue
+		window.draw(d);
 		//display
 		window.display();
 	}

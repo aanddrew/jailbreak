@@ -2,14 +2,17 @@
 #define INPUTHANDLER_H
 
 #include "ActorCommands.h"
+#include <memory>
 
 class InputHandler
 {
 private:
-	ActorCommand* moveUp;
-	ActorCommand* moveDown;
-	ActorCommand* moveLeft;
-	ActorCommand* moveRight;
+	//these are static because they do the same thing for every instance of
+	//InputHandler
+	static std::shared_ptr<ActorCommand> moveUp;
+	static std::shared_ptr<ActorCommand> moveDown;
+	static std::shared_ptr<ActorCommand> moveLeft;
+	static std::shared_ptr<ActorCommand> moveRight;
 public:
 	InputHandler();
 	~InputHandler();
