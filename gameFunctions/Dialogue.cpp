@@ -5,6 +5,11 @@ rect(),
 text(),
 font()
 {
+	this->line = 0;
+	this->character = 0;
+
+	this->timer = 0;
+
 	this->actor1 = actor1;
 	this->actor2 = actor2;
 
@@ -26,9 +31,37 @@ font()
 	
 	text.setFont(font);
 	text.setPosition(boxCorner.x + 10, boxCorner.y + 10);
-	text.setString(sf::String(lines[0]));
+	text.setString(sf::String(lines[line]));
 	text.setCharacterSize(24);
 	text.setFillColor(sf::Color::White);
+}
+
+void Dialogue::advance()
+{
+	if (character < lines[line].length())
+	{
+		character = lines[line].length();
+		return;
+	}
+
+	if (line < lines.size()-1)
+	{
+		line++;
+		character = 0;
+		timer = 0;
+	}
+}
+
+void Dialogue::update(sf::Time dt)
+{
+	timer += dt.asSeconds();
+	if (timer - character*timePerCharacter > 0 
+			&& character < lines[line].length())
+	{
+		character++;
+	}
+
+	text.setString(sf::String(lines[line].substr(0, character)));
 }
 
 void Dialogue::draw(sf::RenderTarget &target, sf::RenderStates states) const

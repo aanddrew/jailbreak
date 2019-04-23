@@ -11,6 +11,9 @@
 class Dialogue : public sf::Drawable
 {
 private:
+	float timePerCharacter = 0.05;
+	float timer;
+
 	int line;
 	int character;
 
@@ -28,8 +31,9 @@ private:
 
 public:
 	Dialogue(Actor* actor1, Actor* actor2, sf::RenderTarget&);
-	void nextLine();
+	void advance();
 	void nextChar();
+	void update(sf::Time dt);
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
 

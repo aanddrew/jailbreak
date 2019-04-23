@@ -47,6 +47,7 @@ int main()
 	bot.setPosition(r.getCenter().x, r.getCenter().y);
 
 	Dialogue * currentDialogue = nullptr;
+	bool dialogueOpened = false;
 
 	while(window.isOpen())
 	{
@@ -65,12 +66,44 @@ int main()
 					break;
 				case sf::Event::KeyPressed:
 				{
-					ih.keyPressed(e.key.code, &player);
-					currentDialogue = new Dialogue(&player, &bot, window);
+					if (!dialogueOpened)
+					{
+						ih.keyPressed(e.key.code, &player);
+					}
+					switch(e.key.code)
+					{
+						//return => opens dialogue
+						case sf::Keyboard::Return:
+						{
+							if (!dialogueOpened)
+							{
+								currentDialogue = new Dialogue(&player, &bot, window);
+								dialogueOpened = true;
+							}
+							//if theres already a dialogue open => advance
+							else
+							{
+								currentDialogue->advance();
+							}
+						}break;
+						//right shift => cancels dialogue
+						case sf::Keyboard::RShift:
+						{
+							if (dialogueOpened)
+							{
+								delete currentDialogue;
+								currentDialogue = nullptr;
+								dialogueOpened = false;
+							}
+						}break;
+					}//end switch statement
 				}break;
 				case sf::Event::KeyReleased:
 				{
-					ih.keyReleased(e.key.code, &player);
+					if (!dialogueOpened)
+					{
+						ih.keyReleased(e.key.code, &player);
+					}
 				}break;
 			}
 		}
@@ -89,7 +122,10 @@ int main()
 		window.draw(bot);
 			//dialogue
 		if (currentDialogue)
+		{
+			currentDialogue->update(dt);
 			window.draw(*currentDialogue);
+		}
 		//display
 		window.display();
 	}
