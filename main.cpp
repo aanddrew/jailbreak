@@ -46,7 +46,7 @@ int main()
 	player.setPosition(r.getCenter().x, r.getCenter().y);
 	bot.setPosition(r.getCenter().x, r.getCenter().y);
 
-	Dialogue d(&player, &bot);
+	Dialogue * currentDialogue = nullptr;
 
 	while(window.isOpen())
 	{
@@ -66,6 +66,7 @@ int main()
 				case sf::Event::KeyPressed:
 				{
 					ih.keyPressed(e.key.code, &player);
+					currentDialogue = new Dialogue(&player, &bot, window);
 				}break;
 				case sf::Event::KeyReleased:
 				{
@@ -87,7 +88,8 @@ int main()
 		window.draw(player);
 		window.draw(bot);
 			//dialogue
-		window.draw(d);
+		if (currentDialogue)
+			window.draw(*currentDialogue);
 		//display
 		window.display();
 	}

@@ -22,11 +22,12 @@ private:
 
 	sf::Font font;
 	sf::Text text;
+	sf::RectangleShape rect;
 
 	std::vector<std::string> lines;
 
 public:
-	Dialogue(Actor* actor1, Actor* actor2);
+	Dialogue(Actor* actor1, Actor* actor2, sf::RenderTarget&);
 	void nextLine();
 	void nextChar();
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
