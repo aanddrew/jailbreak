@@ -3,6 +3,7 @@
 #include "commands/ActorCommands.h"
 #include "commands/InputHandler.h"
 #include "Room.h"
+#include "gameFunctions/Dialogue.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -20,8 +21,11 @@ int main()
 	window.display();
 
 	//INITIALIZING GAME OBJECTS
-	Actor player("resources/jerry_sheet.png",64,96);
+	Actor player("resources/char_sheet_new.png",64,64, 
+							 "resources/dialogues/player.txt");
 	InputHandler ih;
+
+	Actor bot("resources/jerry_sheet.png", 64,96, "resources/dialogues/jerry.txt");
 
 	sf::Event e;
 	sf::Time dt;
@@ -40,6 +44,10 @@ int main()
 
 	//housekeeping, put the player in the center of the game.
 	player.setPosition(r.getCenter().x, r.getCenter().y);
+	bot.setPosition(r.getCenter().x, r.getCenter().y);
+
+	Dialogue * currentDialogue = nullptr;
+	bool dialogueOpened = false;
 
 	while(window.isOpen())
 	{
@@ -58,11 +66,44 @@ int main()
 					break;
 				case sf::Event::KeyPressed:
 				{
-					ih.keyPressed(e.key.code, &player);
+					if (!dialogueOpened)
+					{
+						ih.keyPressed(e.key.code, &player);
+					}
+					switch(e.key.code)
+					{
+						//return => opens dialogue
+						case sf::Keyboard::Return:
+						{
+							if (!dialogueOpened)
+							{
+								currentDialogue = new Dialogue(&player, &bot, window);
+								dialogueOpened = true;
+							}
+							//if theres already a dialogue open => advance
+							else
+							{
+								currentDialogue->advance();
+							}
+						}break;
+						//right shift => cancels dialogue
+						case sf::Keyboard::RShift:
+						{
+							if (dialogueOpened)
+							{
+								delete currentDialogue;
+								currentDialogue = nullptr;
+								dialogueOpened = false;
+							}
+						}break;
+					}//end switch statement
 				}break;
 				case sf::Event::KeyReleased:
 				{
-					ih.keyReleased(e.key.code, &player);
+					if (!dialogueOpened)
+					{
+						ih.keyReleased(e.key.code, &player);
+					}
 				}break;
 			}
 		}
@@ -78,6 +119,13 @@ int main()
 		//draw
 		window.draw(r);
 		window.draw(player);
+		window.draw(bot);
+			//dialogue
+		if (currentDialogue)
+		{
+			currentDialogue->update(dt);
+			window.draw(*currentDialogue);
+		}
 		//display
 		window.display();
 	}

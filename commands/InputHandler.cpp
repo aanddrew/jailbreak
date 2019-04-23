@@ -1,19 +1,29 @@
 #include "InputHandler.h"
 
+std::shared_ptr<ActorCommand> InputHandler::moveUp(new ActorMoveCommand(UP));
+std::shared_ptr<ActorCommand> InputHandler::moveDown(new ActorMoveCommand(DOWN));
+std::shared_ptr<ActorCommand> InputHandler::moveLeft(new ActorMoveCommand(LEFT));
+std::shared_ptr<ActorCommand> InputHandler::moveRight(new ActorMoveCommand(RIGHT));
+
+// :
+// moveUp(UP),
+// moveDown(DOWN),
+// moveLeft(LEFT),
+// moveRight(RIGHT)
 InputHandler::InputHandler()
 {
-	moveUp = new ActorMoveCommand(UP);
-	moveDown = new ActorMoveCommand(DOWN);
-	moveLeft = new ActorMoveCommand(LEFT);
-	moveRight = new ActorMoveCommand(RIGHT);
+	// moveUp = new ActorMoveCommand(UP);
+	// moveDown = new ActorMoveCommand(DOWN);
+	// moveLeft = new ActorMoveCommand(LEFT);
+	// moveRight = new ActorMoveCommand(RIGHT);
 }
 
 InputHandler::~InputHandler()
 {
-	delete(moveUp);
-	delete(moveDown);
-	delete(moveLeft);
-	delete(moveRight);
+	// delete(moveUp);
+	// delete(moveDown);
+	// delete(moveLeft);
+	// delete(moveRight);
 }
 
 void InputHandler::keyPressed(sf::Keyboard::Key code, Actor* actor)

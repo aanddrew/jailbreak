@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include "../SpriteSheet.h"
 
+#include "../gameFunctions/DialogueSheet.h"
+
 enum Move
 {
 	UP,
@@ -36,17 +38,22 @@ enum SheetNum
 class Actor : public sf::Drawable
 {
 private:
+	DialogueSheet dialogueSheet;
 	SpriteSheet sheet;
 	//stores the moving states for each direction, using the enum
 	bool moving[4];
 	Move facing;
 	bool currentlyMoving;
 	bool altMove;
+	int altFaceNum;
 
 	float speed = 200;
-	float spriteTimer;
+	float xVel;
+	float yVel;
+	float spriteMoveTimer;
+	float spriteFaceTimer;
 public:
-	Actor(std::string,int, int);
+	Actor(std::string,int, int, std::string);
 	// Actor(int, int);
 
 	void setPosition(float, float);
@@ -56,6 +63,11 @@ public:
 
 	float getX();
 	float getY();
+
+	float getXVel();
+	float getYVel();
+
+	DialogueSheet* getDialogueSheet();
 
 	//inherited method
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
