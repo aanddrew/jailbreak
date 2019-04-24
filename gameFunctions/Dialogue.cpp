@@ -13,6 +13,9 @@ font()
 	this->actor1 = actor1;
 	this->actor2 = actor2;
 
+	actor1->stop();
+	actor2->stop();
+
 	lines = actor2->getDialogueSheet()->getRandLines();
 
 	if (!font.loadFromFile("resources/fonts/arial.ttf"))
@@ -34,6 +37,14 @@ font()
 	text.setString(sf::String(lines[line]));
 	text.setCharacterSize(24);
 	text.setFillColor(sf::Color::White);
+
+
+}
+
+Dialogue::~Dialogue()
+{
+	actor1->unstop();
+	actor2->unstop();
 }
 
 void Dialogue::advance()
