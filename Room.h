@@ -25,8 +25,12 @@ public:
 	Room(std::string, std::vector<Door>);
 	Room* getNextRoom(float, float);
 	bool insideRoom(float, float);
-	sf::Vector2f getRejectedMapPosition(int, int, int, int);
 	sf::Vector2f getCenter();
+
+	//the walkable bounds of this room
+	void setBounds(sf::FloatRect);
+	sf::FloatRect getBounds();
+
 	//inherited method
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };

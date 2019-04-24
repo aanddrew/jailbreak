@@ -9,3 +9,11 @@ It can get kind of lonely here.
 ...
 Well have a nice day!
 ###
+Howddy!
+Oops I misspelled howdy...
+But wait I'm talking not writing.
+That's kind of strange.
+Oh well, such is the life of a sprite.
+I have no purpose.
+Have a nice day!
+###

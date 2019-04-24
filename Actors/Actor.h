@@ -47,6 +47,8 @@ private:
 	bool altMove;
 	int altFaceNum;
 
+	bool stopped;
+
 	float speed = 200;
 	float xVel;
 	float yVel;
@@ -60,6 +62,9 @@ public:
 
 	void setMoving(Move m, bool state);
 	void update(sf::Time dt);
+
+	void stop();
+	void unstop();
 
 	float getX();
 	float getY();

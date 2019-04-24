@@ -8,9 +8,53 @@
 #include <SFML/Graphics.hpp>
 
 #include <stdio.h>
+#include <algorithm>
+#include <math.h>
+#include <iostream>
 
 static unsigned int SCREEN_HEIGHT = 640;
 static unsigned int SCREEN_WIDTH =480;
+
+Actor* getProximityActor(Actor* target, std::vector<Actor*> actors,
+												 float maxDist)
+{
+	float leastDist = maxDist;
+	Actor* returned = nullptr;
+	for(int i = 0; i < actors.size(); i++)
+	{
+		// std::cout << i << ": " << actors[i] << std::endl;
+		if(actors[i] == target)
+			continue;
+		float xDiff = target->getX() - actors[i]->getX();
+		float yDiff = target->getY() - actors[i]->getY();
+		float dist = sqrt(xDiff*xDiff + yDiff*yDiff);
+		if (dist < leastDist)
+		{
+			leastDist = dist;
+			returned = actors[i];
+		}
+	}
+	return returned;
+}
+
+bool compareActors(Actor* a1, Actor* a2)
+{
+	return a1->getY() < a2->getY();
+}
+
+void kickOutOfBounds(Actor& actor, sf::FloatRect bounding)
+{
+	//if they are out of bounds on top rect
+	if (actor.getX() < bounding.left)
+		actor.setPosition(bounding.left + 0.001, actor.getY());
+	else if (actor.getX() > bounding.left + bounding.width)
+		actor.setPosition(bounding.left + bounding.width -0.001, actor.getY());
+
+	if (actor.getY() < bounding.top)
+		actor.setPosition(actor.getX(), bounding.top +0.001);
+	else if (actor.getY() > bounding.top + bounding.height)
+		actor.setPosition(actor.getX(), bounding.top + bounding.height - 0.001);
+}
 
 int main()
 {
@@ -27,6 +71,13 @@ int main()
 
 	Actor bot("resources/jerry_sheet.png", 64,96, "resources/dialogues/jerry.txt");
 
+	Actor bot2("resources/jerry_sheet.png", 64,96, "resources/dialogues/terry.txt");
+
+	std::vector<Actor*> actors;
+	actors.push_back(&player);
+	actors.push_back(&bot);
+	actors.push_back(&bot2);
+
 	sf::Event e;
 	sf::Time dt;
 	sf::Clock clock;
@@ -34,6 +85,7 @@ int main()
 	//DEBUG: remove later - this is to test the room
 	std::vector<Door> doorsTest;
 	Room r("resources/cells.png", doorsTest);
+	r.setBounds(sf::FloatRect(0, 224, 1048, 354));
 
 		//setting the view and stuff
 	sf::View currView = window.getView();
@@ -44,7 +96,8 @@ int main()
 
 	//housekeeping, put the player in the center of the game.
 	player.setPosition(r.getCenter().x, r.getCenter().y);
-	bot.setPosition(r.getCenter().x, r.getCenter().y);
+	bot.setPosition(r.getCenter().x, r.getCenter().y+200);
+	bot2.setPosition(r.getCenter().x-400, r.getCenter().y+200);
 
 	Dialogue * currentDialogue = nullptr;
 	bool dialogueOpened = false;
@@ -66,22 +119,20 @@ int main()
 					break;
 				case sf::Event::KeyPressed:
 				{
-					if (!dialogueOpened)
-					{
-						ih.keyPressed(e.key.code, &player);
-					}
+					ih.keyPressed(e.key.code, &player);
 					switch(e.key.code)
 					{
 						//return => opens dialogue
 						case sf::Keyboard::Return:
 						{
-							if (!dialogueOpened)
+							Actor* converser = getProximityActor(&player, actors, 50);
+							if (!dialogueOpened && converser != nullptr)
 							{
-								currentDialogue = new Dialogue(&player, &bot, window);
+								currentDialogue = new Dialogue(&player, converser, window);
 								dialogueOpened = true;
 							}
 							//if theres already a dialogue open => advance
-							else
+							else if (dialogueOpened)
 							{
 								currentDialogue->advance();
 							}
@@ -100,10 +151,7 @@ int main()
 				}break;
 				case sf::Event::KeyReleased:
 				{
-					if (!dialogueOpened)
-					{
-						ih.keyReleased(e.key.code, &player);
-					}
+					ih.keyReleased(e.key.code, &player);
 				}break;
 			}
 		}
@@ -114,18 +162,27 @@ int main()
 
 		player.update(dt);
 
+		kickOutOfBounds(player, r.getBounds());
+
 		//clear
 		window.clear();
-		//draw
+	//-------------RENDERING ORDER--------------
+		//draw the room
 		window.draw(r);
-		window.draw(player);
-		window.draw(bot);
-			//dialogue
+		//sort the actors by their x distance, so they are drawn correctly
+		std::sort(actors.begin(), actors.end(), compareActors);
+		//draw the actors
+		for(int i = 0; i < actors.size(); i++)
+		{
+			window.draw(*actors[i]);
+		}
+		//draw the dialogue
 		if (currentDialogue)
 		{
 			currentDialogue->update(dt);
 			window.draw(*currentDialogue);
 		}
+	//-------------RENDERING DONE----------------
 		//display
 		window.display();
 	}
