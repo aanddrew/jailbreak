@@ -6,6 +6,10 @@ Actor::Actor(std::string spriteFileName, int width, int height,
 sheet(spriteFileName, width, height),
 dialogueSheet(dialogueFileName)
 {
+	for(int i = 0; i < 4; i++)
+	{
+		moving[i] = false;
+	}
 	altMove  = false;
 	facing = DOWN;
 	spriteMoveTimer = 0;
@@ -13,6 +17,8 @@ dialogueSheet(dialogueFileName)
 	altFaceNum = 0;
 	xVel = 0;
 	yVel = 0;
+
+	stopped = false;
 }
 
 void Actor::setPosition(float xIn, float yIn)
@@ -20,15 +26,12 @@ void Actor::setPosition(float xIn, float yIn)
 	sheet.setPosition(xIn, yIn);
 }
 
-float Actor::getX()
-{
-	return sheet.getX();
-}
+float Actor::getX() {return sheet.getX();}
 
-float Actor::getY()
-{
-	return sheet.getY();;
-}
+float Actor::getY() {return sheet.getY();}
+
+void Actor::stop() {stopped = true;}
+void Actor::unstop() {stopped = false;}
 
 float Actor::getXVel() {return this->xVel;}
 float Actor::getYVel() {return this->yVel;}
@@ -95,7 +98,14 @@ void Actor::update(sf::Time dt)
 		facing = RIGHT;
 	}
 
-	sheet.move(xVel, yVel);
+	if (stopped)
+	{
+		currentlyMoving = false;
+	}
+	else
+	{
+		sheet.move(xVel, yVel);
+	}
 
 	if (!currentlyMoving)
 	{

@@ -31,6 +31,7 @@ private:
 
 public:
 	Dialogue(Actor* actor1, Actor* actor2, sf::RenderTarget&);
+	~Dialogue();
 	void advance();
 	void nextChar();
 	void update(sf::Time dt);
